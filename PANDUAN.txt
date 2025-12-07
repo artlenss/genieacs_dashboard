@@ -1,0 +1,123 @@
+TUTORIAL INSTALASI GENIEACS DASHBOARD DI XAMPP
+1. Persiapan Awal
+Pastikan Anda sudah mengunduh dan menginstall XAMPP (Versi PHP 7.4 atau 8.x disarankan).
+
+Buka aplikasi XAMPP Control Panel.
+
+Klik tombol Start pada baris Apache.
+
+(Catatan: Aplikasi ini tidak menggunakan database MySQL lokal, jadi Anda tidak wajib menyalakan MySQL, cukup Apache saja).
+
+Pastikan indikator Apache berwarna Hijau.
+
+2. Menyiapkan Folder Proyek
+Kita harus menyusun file sesuai struktur yang telah kita buat.
+
+Buka File Explorer, masuk ke folder instalasi XAMPP. Biasanya di: C:\xampp\htdocs\
+
+Buat folder baru dengan nama: genieacs
+
+Di dalam folder genieacs, buat folder baru lagi bernama: include
+
+Struktur folder Anda harus terlihat seperti ini:
+
+Plaintext
+
+C:\xampp\htdocs\genieacs\
+│
+├── login.php          (Halaman Login)
+├── index.php          (Halaman Utama/Dashboard)
+├── map.php            (Halaman Peta)
+├── logout.php         (Script Keluar)
+├── logo.png           (Gambar Logo Perusahaan Anda)
+│
+└── include\           (Folder)
+    ├── config.php     (Konfigurasi IP & User)
+    ├── api.php        (Gerbang API)
+    └── processor.php  (Logic Penghubung ke GenieACS)
+3. Membuat File (Copy-Paste Code)
+Jika Anda belum menyimpan kodenya, silahkan buat file satu per satu menggunakan Notepad atau Visual Studio Code, lalu paste kode terakhir yang sudah kita perbaiki sebelumnya.
+
+C:\xampp\htdocs\genieacs\include\config.php
+
+Paste kode konfigurasi terakhir (yang passwordnya 123456).
+
+PENTING: Ubah define('GENIE_HOST', '172.20.200.101'); sesuai IP Server GenieACS Anda yang sebenarnya jika berubah.
+
+C:\xampp\htdocs\genieacs\include\processor.php
+
+Paste kode processor (yang ada fitur pencarian huruf besar/kecil).
+
+C:\xampp\htdocs\genieacs\include\api.php
+
+Paste kode API terakhir (yang ada backup path IP WAN/PPPoE).
+
+C:\xampp\htdocs\genieacs\index.php
+
+Paste kode Dashboard terakhir (yang ada perbaikan IP undefined & tombol remote).
+
+C:\xampp\htdocs\genieacs\map.php
+
+Paste kode Map terakhir (yang ada fitur popup mini dashboard & delete popup saat klik).
+
+C:\xampp\htdocs\genieacs\login.php
+
+Paste kode Login terakhir (yang ada gambarnya).
+
+C:\xampp\htdocs\genieacs\logout.php
+
+Isinya cukup:
+
+PHP
+
+<?php
+session_start();
+session_destroy();
+header("Location: login.php");
+?>
+logo.png
+
+Siapkan gambar logo perusahaan Anda, rename jadi logo.png, taruh di folder genieacs.
+
+4. Cek Ekstensi PHP (Wajib)
+Aplikasi ini menggunakan CURL untuk berkomunikasi dengan GenieACS. Biasanya di XAMPP sudah aktif, tapi untuk memastikan:
+
+Buka C:\xampp\php\php.ini dengan Notepad.
+
+Cari tulisan ;extension=curl.
+
+Hapus tanda titik koma (;) di depannya agar menjadi: extension=curl
+
+Simpan file, lalu Stop dan Start kembali Apache di XAMPP Control Panel.
+
+5. Menjalankan Aplikasi
+Buka Browser (Chrome / Edge).
+
+Ketik alamat: http://localhost/genieacs/
+
+Anda akan diarahkan ke halaman Login.
+
+Masukkan:
+
+User: admin
+
+Pass: 123456
+
+6. Troubleshooting (Jika Ada Masalah)
+Masalah: Muncul pesan "Akses langsung ditolak" saat buka index.php.
+
+Solusi: Cek file index.php, pastikan baris paling atas ada define('GENIE_ACCESS', true);.
+
+Masalah: Tidak bisa login, halaman hanya loading terus.
+
+Solusi: Cek koneksi internet PC Anda ke Server GenieACS. Buka Command Prompt (CMD) lalu ketik ping 172.20.200.101 (sesuai IP server). Jika RTO (Request Timed Out), berarti PC tidak bisa menghubungi server.
+
+Masalah: Data kosong semua di tabel.
+
+Solusi: Pastikan Username & Password GenieACS (bukan dashboard) yang ada di file include/config.php sudah benar.
+
+Masalah: Peta tidak muncul (Blank abu-abu).
+
+Solusi: Pastikan PC terkoneksi internet (karena peta mengambil gambar dari server OpenStreetMap/CartoDB).
+
+Selamat mencoba! Aplikasi siap digunakan
